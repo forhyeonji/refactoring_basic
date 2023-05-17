@@ -14,8 +14,17 @@ export class Person {
     return this.#courses;
   }
 
-  set courses(courses) {
-    this.#courses = courses;
+  addCourse(course) {
+    this.#courses.push(course);
+  }
+
+  removeCourse(course, runIfAbsent) {
+    const index = this.#courses.indexOf(course);
+    if (index === -1) {
+      runIfAbsent();
+      return;
+    }
+    this.#courses.splice(index, 1);
   }
 }
 
@@ -37,5 +46,13 @@ export class Course {
 }
 
 const ellie = new Person('엘리');
-ellie.courses.push(new Course('리팩토링', true));
+const course = new Course('리팩토링', true);
+
+// ✏️ : 컬렉션을 직접 건드리는게 아니라 addCourse 같은 함수를 만들어서 접근해야한다!
+ellie.addCourse(course);
+console.log(ellie.courses.length);
+
+ellie.removeCourse(course, () => {
+  console.log('삭제할 강의가 없다!');
+});
 console.log(ellie.courses.length);
